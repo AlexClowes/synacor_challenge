@@ -3,28 +3,28 @@ import sys
 
 
 OPS = [
-    "halt",
-    "set",
-    "push",
-    "pop",
-    "eq",
-    "gt",
-    "jmp",
-    "jt",
-    "jf",
-    "add",
-    "mult",
-    "mod",
-    "and_",
-    "or_",
-    "not_",
-    "rmem",
-    "wmem",
-    "call",
-    "ret",
-    "out",
-    "in_",
-    "noop",
+    "_halt",
+    "_set",
+    "_push",
+    "_pop",
+    "_eq",
+    "_gt",
+    "_jmp",
+    "_jt",
+    "_jf",
+    "_add",
+    "_mult",
+    "_mod",
+    "_and",
+    "_or",
+    "_not",
+    "_rmem",
+    "_wmem",
+    "_call",
+    "_ret",
+    "_out",
+    "_in",
+    "_noop",
 ]
 N_ARGS = [0, 2, 1, 1, 3, 3, 1, 2, 2, 3, 3, 3, 3, 3, 2, 2, 2, 1, 0, 1, 1, 0]
 
@@ -84,76 +84,76 @@ class Computer:
         else:
             raise ValueError(f"Invalid number {x}")
 
-    def halt(self):
+    def _halt(self):
         self.status = Status.HALT
 
-    def set(self, a, b):
+    def _set(self, a, b):
         self.registers[a] = self._get_val(b)
 
-    def push(self, a):
+    def _push(self, a):
         self.stack.append(self._get_val(a))
 
-    def pop(self, a):
+    def _pop(self, a):
         self.registers[a] = self.stack.pop()
 
-    def eq(self, a, b, c):
+    def _eq(self, a, b, c):
         self.registers[a] = int(self._get_val(b) == self._get_val(c))
 
-    def gt(self, a, b, c):
+    def _gt(self, a, b, c):
         self.registers[a] = int(self._get_val(b) > self._get_val(c))
 
-    def jmp(self, a):
+    def _jmp(self, a):
         self.instr_ptr = self._get_val(a)
 
-    def jt(self, a, b):
+    def _jt(self, a, b):
         if self._get_val(a) != 0:
             self.instr_ptr = self._get_val(b)
 
-    def jf(self, a, b):
+    def _jf(self, a, b):
         if self._get_val(a) == 0:
             self.instr_ptr = self._get_val(b)
 
-    def add(self, a, b, c):
+    def _add(self, a, b, c):
         self.registers[a] = (self._get_val(b) + self._get_val(c)) % (2 ** 15)
 
-    def mult(self, a, b, c):
+    def _mult(self, a, b, c):
         self.registers[a] = (self._get_val(b) * self._get_val(c)) % (2 ** 15)
 
-    def mod(self, a, b, c):
+    def _mod(self, a, b, c):
         self.registers[a] = self._get_val(b) % self._get_val(c)
 
-    def and_(self, a, b, c):
+    def _and(self, a, b, c):
         self.registers[a] = self._get_val(b) & self._get_val(c)
 
-    def or_(self, a, b, c):
+    def _or(self, a, b, c):
         self.registers[a] = self._get_val(b) | self._get_val(c)
 
-    def not_(self, a, b):
+    def _not(self, a, b):
         self.registers[a] = 2 ** 15 - 1 - self._get_val(b)
 
-    def rmem(self, a, b):
+    def _rmem(self, a, b):
         self.registers[a] = self.memory[self._get_val(b)]
 
-    def wmem(self, a, b):
+    def _wmem(self, a, b):
         self.memory[self._get_val(a)] = self._get_val(b)
 
-    def call(self, a):
-        self.push(self.instr_ptr)
+    def _call(self, a):
+        self._push(self.instr_ptr)
         self.instr_ptr = self._get_val(a)
 
-    def ret(self):
+    def _ret(self):
         if self.stack:
             self.instr_ptr = self.stack.pop()
         else:
             self.status = Status.HALT
 
-    def out(self, a):
+    def _out(self, a):
         sys.stdout.write(chr(self._get_val(a)))
 
-    def in_(self, a):
+    def _in(self, a):
         self.registers[a] = ord(sys.stdin.read(1))
 
-    def noop(self):
+    def _noop(self):
         pass
 
 
