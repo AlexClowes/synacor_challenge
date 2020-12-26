@@ -48,12 +48,14 @@ class Registers(dict):
 
 
 class Computer:
-    def __init__(self):
+    def __init__(self, file_in=sys.stdin):
         self.registers = Registers({k: 0 for k in range(2 ** 15, 2 ** 15 + 8)})
         self.memory = [0] * 2 ** 15
         self.instr_ptr = 0
         self.stack = []
         self.status = Status.OK
+
+        self.file_in = file_in
 
     def load_prog(self, prog_loc):
         mem_ptr = 0
@@ -151,14 +153,17 @@ class Computer:
         sys.stdout.write(chr(self._get_val(a)))
 
     def _in(self, a):
-        self.registers[a] = ord(sys.stdin.read(1))
+        if self.file_in is not sys.stdin and not self.file_in.peek(1):
+            self.file_in = sys.stdin
+        self.registers[a] = ord(self.file_in.read(1))
 
     def _noop(self):
         pass
 
 
 def main():
-    c = Computer()
+    file_in = open(sys.argv[1], mode="br") if len(sys.argv) > 1 else sys.stdin
+    c = Computer(file_in)
     c.run("challenge.bin")
 
 
