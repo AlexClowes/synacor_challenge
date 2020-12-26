@@ -38,13 +38,13 @@ class Registers(dict):
     def __getitem__(self, key):
         if 2 ** 15 <= key < 2 ** 15 + 8:
             return super().__getitem__(key)
-        raise ValueError
+        raise ValueError(f"Invalid register {key}")
 
     def __setitem__(self, key, val):
         if 2 ** 15 <= key < 2 ** 15 + 8:
             super().__setitem__(key, val)
         else:
-            raise ValueError
+            raise ValueError(f"Invalid register {key}")
 
 
 class Computer:
