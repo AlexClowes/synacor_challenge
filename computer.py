@@ -138,7 +138,7 @@ class Computer:
         self.memory[self._get_val(a)] = self._get_val(b)
 
     def _call(self, a):
-        self._push(self.instr_ptr)
+        self.stack.append(self.instr_ptr)
         self.instr_ptr = self._get_val(a)
 
     def _ret(self):
