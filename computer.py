@@ -166,7 +166,26 @@ class Computer:
 def main():
     file_in = open(sys.argv[1], mode="br") if len(sys.argv) > 1 else sys.stdin
     c = Computer(file_in)
-    c.run("challenge.bin")
+
+    def change_reg(reg, val):
+        def setter(self):
+            self.registers[2 ** 15 + reg] = val
+
+        return setter
+
+    def jump_to(address):
+        def setter(self):
+            self.memory[self.instr_ptr] = 6  # jmp
+            self.memory[self.instr_ptr + 1] = address
+
+        return setter
+
+    extra_actions = {
+        5451: change_reg(7, 25734),  # Change high register to correct value
+        5489: jump_to(5491),  # Skip call to 6027
+        5491: change_reg(0, 6),  # Register 0 would be 6 if call to 6027 had taken place
+    }
+    c.run("challenge.bin", extra_actions)
 
 
 if __name__ == "__main__":
