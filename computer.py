@@ -61,8 +61,7 @@ class Computer:
         mem_ptr = 0
         with open(prog_loc, mode="br") as f:
             while (prog_word := f.read(2)):
-                val = int.from_bytes(prog_word, "little")
-                self.memory[mem_ptr] = val
+                self.memory[mem_ptr] = int.from_bytes(prog_word, "little")
                 mem_ptr += 1
 
     def run(self, prog_loc):
