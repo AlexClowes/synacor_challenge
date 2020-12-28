@@ -60,7 +60,7 @@ class Computer:
     def load_prog(self, prog_loc):
         mem_ptr = 0
         with open(prog_loc, mode="br") as f:
-            while (prog_word := f.read(2)):
+            while prog_word := f.read(2):
                 self.memory[mem_ptr] = int.from_bytes(prog_word, "little")
                 mem_ptr += 1
 
