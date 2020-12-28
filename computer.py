@@ -64,9 +64,11 @@ class Computer:
                 self.memory[mem_ptr] = int.from_bytes(prog_word, "little")
                 mem_ptr += 1
 
-    def run(self, prog_loc):
+    def run(self, prog_loc, extra_actions):
         self.load_prog(prog_loc)
         while self.status == Status.OK:
+            if self.instr_ptr in extra_actions:
+                extra_actions[self.instr_ptr](self)
             opcode = self.memory[self.instr_ptr]
             operation = OPS[opcode]
             n_args = N_ARGS[opcode]
@@ -74,6 +76,7 @@ class Computer:
             args = self.memory[self.instr_ptr : self.instr_ptr + n_args]
             self.instr_ptr += n_args
             getattr(self, operation)(*args)
+
         if self.status != Status.HALT:
             raise ValueError(f"Program exited with status code {self.status}")
 
